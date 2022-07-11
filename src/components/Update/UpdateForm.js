@@ -1,30 +1,21 @@
 import { useRef, useContext, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { Component, Fragment } from "react/cjs/react.production.min";
+
+import { Fragment } from "react/cjs/react.production.min";
 import { Prompt } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
+
 import LoadingSpinner from "../UI/LoadingSpinner";
 import Card1 from "../UI/Card1";
 
-import classes from "./AppointmentsForm.module.css";
-import { appointmentActions } from "../../store/appointment-slice";
-const FIREBASE_DOMAIN =
-  "https://webapp-appointments-default-rtdb.firebaseio.com";
+import classes from "./UpdateForm.module.css";
 
 const ProfileForm = (props) => {
-  const history = useHistory();
   const newStartTimeInputRef = useRef();
   const newEndTimeInputRef = useRef();
   const newNameInputRef = useRef();
   const newDescriptionInputRef = useRef();
-  const authCtx = useContext(AuthContext);
-
+  const newDateInputRef = useRef();
 
   const [isEntered, setIsEntered] = useState(false);
-  const [userAppointments, setUserAppointments] = useState([]);
-  //const dispatch = useDispatch();
-  
 
   const editFormHandler = (event) => {
     event.preventDefault();
@@ -33,31 +24,24 @@ const ProfileForm = (props) => {
     const enteredNewEndTime = newEndTimeInputRef.current.value;
     const enteredNewName = newNameInputRef.current.value;
     const enteredNewDescription = newDescriptionInputRef.current.value;
+    const enteredNewDate = newDateInputRef.current.value;
     const newCurrentTime = Date().toLocaleString();
+    const edited = "Edited ";
     const currentId = props.id;
     const currentUser = props.uid;
-    const currTime = props.timeStamp;
+    const currTime = edited + newCurrentTime;
 
-/*
-    props.onGetAppointment({
-      id: currentId,
-      name: props.name,
-      startTime: props.startTime,
-      endTime: props.endTime,
-      description: props.description,
-    });*/
-
-     props.onUpdateAppointment({
+    props.onUpdateAppointment({
       localId: currentUser,
       id: currentId,
       name: enteredNewName,
       startTime: enteredNewStartTime,
       endTime: enteredNewEndTime,
       description: enteredNewDescription,
-      timeStamp: currTime,
-      updatedTime: newCurrentTime,
+      //timeStamp: currTime,
+      date: enteredNewDate,
+      updatedTime: currTime,
     });
-
   };
 
   function formFocusedHandler() {
@@ -67,31 +51,6 @@ const ProfileForm = (props) => {
   async function finishEnteringHandler() {
     setIsEntered(false);
   }
-
-  //Edit info
-  // fetch(
-  //   "https://webapp-appointments-default-rtdb.firebaseio.com/appointments.json",
-  //   {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       id: authCtx.token,
-  //       //returnSecureToken: false,
-  //       // userId: userId.current.value,
-  //       // created: enteredDate,
-  //       startTime: enteredNewStartTime,
-  //       endTime: enteredNewEndTime,
-  //       name: enteredNewName,
-  //       description: enteredNewDescription
-
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   }
-  // ).then(res => {
-
-  //   history.replace('/');
-  // });
 
   return (
     <Fragment>
@@ -112,6 +71,10 @@ const ProfileForm = (props) => {
               <LoadingSpinner />
             </div>
           )}
+          <div className={classes.control}>
+            <label htmlFor="new-date">Start Time</label>
+            <input type="date" id="new-date" ref={newDateInputRef} />
+          </div>
           <div className={classes.control}>
             <label htmlFor="new-startTime">Start Time</label>
             <input type="time" id="new-startTime" ref={newStartTimeInputRef} />

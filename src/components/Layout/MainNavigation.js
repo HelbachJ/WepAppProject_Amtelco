@@ -10,12 +10,10 @@ const MainNavigation = (props) => {
   const params = useParams();
 
   const isLoggedIn = authCtx.isLoggedIn;
- // localStorage.getItem(props.user)
-  
 
   const LogoutHandler = () => {
     authCtx.logout();
-    history.replace('/')
+    history.replace("/");
   };
 
   return (
@@ -27,13 +25,16 @@ const MainNavigation = (props) => {
         <ul>
           {!isLoggedIn && (
             <li>
-              <Link to='/'>Login</Link>
+              <Link to="/">Login</Link>
             </li>
           )}
 
           {isLoggedIn && (
             <li>
-              <Link to={`/appointments/${authCtx.localId}`} activeClassName={classes.active}>
+              <Link
+                to={`/appointments/${authCtx.localId}`}
+                activeClassName={classes.active}
+              >
                 Appointments
               </Link>
             </li>
@@ -41,7 +42,10 @@ const MainNavigation = (props) => {
 
           {isLoggedIn && (
             <li>
-              <Link activeClassName={classes.active} to={`/newAppointment/${props.userId}`} >
+              <Link
+                activeClassName={classes.active}
+                to={`/newAppointment/${authCtx.localId}`}
+              >
                 Add Appointment
               </Link>
             </li>

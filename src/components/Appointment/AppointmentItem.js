@@ -1,28 +1,24 @@
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import UpdateAppointment from "../../pages/UpdateAppointment";
 
-import classes from "./QuoteItem.module.css";
-import { Button } from "bootstrap";
+import classes from "./AppointmentItem.module.css";
 import { getSingleAppointment } from "../../lib/api";
 import useHttp from "../../hooks/use-http";
-import ProfileForm from "./ProfileForm";
-import AuthContext from "../../store/auth-context";
 
 const AppointmentItem = (props) => {
   const [userAppointments, setUserAppointments] = useState([]);
   const history = useHistory();
   const location = useLocation();
-  const authCtx = useContext(AuthContext);
+  const currentTime = Date().toLocaleString();
+  localStorage.setItem("timeStamp", currentTime);
 
-  const {sendRequest, status} = useHttp(getSingleAppointment);
+  const { sendRequest, status } = useHttp(getSingleAppointment);
 
-    useEffect(() => {
-        if(status === 'completed' ){
-            history.replace(`/appointments/${props.localId}`);
-        }
-    },[status,history]);
-
+  useEffect(() => {
+    if (status === "completed") {
+      history.replace(`/appointments/${props.localId}`);
+    }
+  }, [status, history]);
 
   useEffect(() => {
     console.log("RENDERING APPOINTMENTS", userAppointments);
@@ -41,29 +37,30 @@ const AppointmentItem = (props) => {
       setUserAppointments((prevAppointments) =>
         prevAppointments.filter((appointment) => appointment.id !== props.id)
       );
+      window.location.reload(false); //temporary fix
     });
-  }
-
-  function editHandler(appointmentData){
-    sendRequest(appointmentData)
-    //return<ProfileForm isLoading = {status === 'pending'} onUpdateAppointment={updateAppointmentHandler} />
   }
 
   return (
     <div>
       <li className={classes.item}>
         <figure>
-        <figcaption>User Id: {props.localId}</figcaption>
-          <time>Created: {props.timeStamp} </time>
-          <time>Edited: {props.updatedTime}</time>
+          <figcaption>User Id: {props.localId}</figcaption>
+          <time>
+            {props.timeStamp} {props.updatedTime}{" "}
+          </time>
           <blockquote>
+            <p>{props.date}</p>
             <p>{props.startTime + " - " + props.endTime}</p>
           </blockquote>
           <figcaption>{props.name}</figcaption>
           <figcaption>{props.description}</figcaption>
         </figure>
         <button>
-          <Link className="btn" to={`/appointment/${props.localId}/${props.id}`}>
+          <Link
+            className="btn"
+            to={`/appointment/${props.localId}/${props.id}`}
+          >
             edit
           </Link>
         </button>
