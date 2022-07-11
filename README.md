@@ -8,6 +8,8 @@ Steps to run:
 3) Run "yarn install" to fully install node.js and yarn into the project
 4) Run "yarn start" to view the project
 
-This application has the user login which sends them to an appointment page.
-  At the appointment page the user is then allowed add, edit, and delete appointments as well as logout.
-  All user data is unique 
+This application has the user login which if accepted gives the user a token that gives them permission to access the page and gets the users ID.
+  The token will deactivate after a while of inactivity and the user will be logged out.
+  If the user information is correct they will be sent to the appointments page, 
+  where they are then allowed  to add, edit, and delete appointments as well as logout.
+  All appoinment data is unique to the user so that each user is able to have their own separate appointments.
