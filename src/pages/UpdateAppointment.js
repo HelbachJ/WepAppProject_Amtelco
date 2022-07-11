@@ -15,12 +15,7 @@ function UpdateAppointments(props) {
 
   const { appointmentId, userId } = params;
 
-  const {
-    sendRequests,
-    state,
-    data: loadedAppointment,
-    error,
-  } = useHttps(getSingleAppointment, true);
+  const { sendRequests, state } = useHttps(getSingleAppointment, true);
 
   const { sendRequest, status } = useHttp(UpdateAppointment);
 
@@ -28,7 +23,7 @@ function UpdateAppointments(props) {
     if (status === "completed" && state === "completed") {
       history.replace(`/appointments/${authCtx.localId}`);
     }
-  }, [status, state, history]);
+  }, [status, state, history, authCtx.localId]);
 
   useEffect(() => {
     sendRequests(appointmentId);

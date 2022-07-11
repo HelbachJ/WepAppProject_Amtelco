@@ -1,5 +1,5 @@
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 import classes from "./AppointmentItem.module.css";
 import { getSingleAppointment } from "../../lib/api";
@@ -12,13 +12,13 @@ const AppointmentItem = (props) => {
   const currentTime = Date().toLocaleString();
   localStorage.setItem("timeStamp", currentTime);
 
-  const { sendRequest, status } = useHttp(getSingleAppointment);
+  const { status } = useHttp(getSingleAppointment);
 
   useEffect(() => {
     if (status === "completed") {
       history.replace(`/appointments/${props.localId}`);
     }
-  }, [status, history]);
+  }, [status, history, props.localId]);
 
   useEffect(() => {
     console.log("RENDERING APPOINTMENTS", userAppointments);

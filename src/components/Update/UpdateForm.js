@@ -1,4 +1,4 @@
-import { useRef, useContext, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Fragment } from "react/cjs/react.production.min";
 import { Prompt } from "react-router-dom";
@@ -38,7 +38,6 @@ const ProfileForm = (props) => {
       startTime: enteredNewStartTime,
       endTime: enteredNewEndTime,
       description: enteredNewDescription,
-      //timeStamp: currTime,
       date: enteredNewDate,
       updatedTime: currTime,
     });
