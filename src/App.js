@@ -21,16 +21,6 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const AllAppointments = React.lazy(() => import("./pages/AllAppointments"));
 const UpdateAppointment = React.lazy(() => import("./pages/UpdateAppointment"));
 
-// const admin = require("firebase-admin");
-
-// var serviceAccount = require("./serviceAccountKey.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://webapp-appointments-default-rtdb.firebaseio.com"
-// });
-// admin.auth().listUsers().then(data=>{console.log(data.users)})
-
 function App(props) {
   const authCtx = useContext(AuthContext);
 
@@ -48,12 +38,12 @@ function App(props) {
             <StartingPageContent />
           </Route> */}
           {!authCtx.isLoggedIn && (
-            <Route path="/" exact>
+            <Route path='/' exact>
               <AuthPage />
             </Route>
           )}
           {authCtx.isLoggedIn && (
-            <Route path={`/appointments/${props.userId}`} exact>
+            <Route path="/appointments/:userId">
               <AllAppointments />
             </Route>
           )}
@@ -68,12 +58,12 @@ function App(props) {
           </Route>
         )} */}
           {authCtx.isLoggedIn && (
-            <Route path={`/newAppointment/${props.userId}`}>
+            <Route path="/newAppointment/:userId">
               <NewAppointment />
             </Route>
           )}
            {authCtx.isLoggedIn && (
-             <Route path={`/appointments/${props.userId}/:appointmentId`}>
+             <Route path="/appointment/:userId/:appointmentId">
               <UpdateAppointment />
             </Route>
           )}

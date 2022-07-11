@@ -43,9 +43,11 @@
 //     )
 //   };
 
-import { useRef, useState } from "react";
+import { useSSRSafeId } from "@react-aria/ssr";
+import { useRef, useState, useContext } from "react";
 import { Prompt } from "react-router-dom";
 import { Fragment } from "react/cjs/react.production.min";
+import AuthContext from "../../store/auth-context";
 
 import Card1 from "../UI/Card1";
 import LoadingSpinner from "../UI/LoadingSpinner";
@@ -59,6 +61,8 @@ const AppointmentsForm = (props) => {
   const endInputRef = useRef();
   const nameInputRef = useRef();
   const descriptionInputRef = useRef();
+  //const userIdRef = useRef();
+  const authCtx = useContext(AuthContext);
   //const timeStampRef = useRef();
 
   function submitFormHandler(event) {
@@ -69,52 +73,70 @@ const AppointmentsForm = (props) => {
     const enteredEndTime = endInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
     const currentTime = Date().toLocaleString();
+    const userId = authCtx.localId;
 
+    // let url =
+    //   "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key= AIzaSyBn2Seq2SIPI7aF1D2rjlhPfOR1pAdjssM ";
+    // fetch(url, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     idToken: authCtx.token,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // }).then(res=>{
+    //   return res.json();
+    // }).then((data) => {
+    //   authCtx.login(data.localId);
+    //   console.log(data.localId)
+    // });
+    
     // optional: Could validate here
 
     props.onAddAppointment({
-      uid: props.uid,
+      localId: userId,
       name: enteredName,
       startTime: enteredStartTime,
       endTime: enteredEndTime,
       description: enteredDescription,
-      timeStamp: currentTime
+      timeStamp: currentTime,
     });
   }
 
   function formFocusedHandler() {
     setIsEntered(true);
-  };
+  }
 
   function finishEnteringHandler() {
     setIsEntered(false);
-  };
+  }
 
   //return (
-    // <form className={classes.form} onSubmit={submitHandler}>
-    //   <div className={classes.control}>
-    //     <label htmlFor="startTime">Start Time</label>
-    //     <input type="int" id="startTime" ref={startInputRef} />
-    //   </div>
-    //   <div className={classes.control}>
-    //     <label htmlFor="endTime">End Time</label>
-    //     <input type="int" id="endTime" ref={endInputRef} />
-    //   </div>
-    //   <div className={classes.control}>
-    //     <label htmlFor="name">Name</label>
-    //     <input type="test" id="name" ref={nameInputRef} />
-    //   </div>
-    //   <div className={classes.control}>
-    //     <label htmlFor="description">Description</label>
-    //     <input type="string" id="description" ref={descriptionInputRef} />
-    //   </div>
-    //   <div className={classes.action}>
-    //     <button onClick={submitHandler}>Add</button>
-    //     <button onClick={editHandler}>Edit</button>
-    //     {/* <button onClick={deleteHandler}>Delete</button> */}
-    //   </div>
-    // </form>
-    return (
+  // <form className={classes.form} onSubmit={submitHandler}>
+  //   <div className={classes.control}>
+  //     <label htmlFor="startTime">Start Time</label>
+  //     <input type="int" id="startTime" ref={startInputRef} />
+  //   </div>
+  //   <div className={classes.control}>
+  //     <label htmlFor="endTime">End Time</label>
+  //     <input type="int" id="endTime" ref={endInputRef} />
+  //   </div>
+  //   <div className={classes.control}>
+  //     <label htmlFor="name">Name</label>
+  //     <input type="test" id="name" ref={nameInputRef} />
+  //   </div>
+  //   <div className={classes.control}>
+  //     <label htmlFor="description">Description</label>
+  //     <input type="string" id="description" ref={descriptionInputRef} />
+  //   </div>
+  //   <div className={classes.action}>
+  //     <button onClick={submitHandler}>Add</button>
+  //     <button onClick={editHandler}>Edit</button>
+  //     {/* <button onClick={deleteHandler}>Delete</button> */}
+  //   </div>
+  // </form>
+  return (
     <Fragment>
       <Prompt
         when={isEntered}

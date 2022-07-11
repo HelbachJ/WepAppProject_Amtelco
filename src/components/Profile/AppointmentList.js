@@ -41,7 +41,7 @@ const AppointmentList = (props) => {
       <ul className={classes.list}>
         {sortedAppointments.map((appointment) => (
           <AppointmentItem
-            userId = {appointment.userId}
+            localId = {appointment.localId}
             key={appointment.id}
             id={appointment.id}
             name={appointment.name}

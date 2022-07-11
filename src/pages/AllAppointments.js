@@ -1,13 +1,13 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useParams} from "react-router-dom";
 import useHttp from "../hooks/use-http";
 import { getAllAppointments } from "../lib/api";
 import AppointmentList from "../components/Profile/AppointmentList";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import NoAppointmentsFound from "../components/Profile/NoAppointmentsFound";
-
+import AuthContext from "../store/auth-context";
 import {initializeApp} from "firebase/app"
-import {getAuth} from "firebase/auth"
+import {confirmPasswordReset, getAuth} from "firebase/auth"
 
 function AllAppointments(props) {
 
@@ -32,10 +32,11 @@ function AllAppointments(props) {
   // }
 
 //console.log(uid)
-
+const authCtx = useContext(AuthContext);
   const params = useParams();
 
   const { userId } = params;
+
     const {
       sendRequest,
       status,
@@ -44,8 +45,8 @@ function AllAppointments(props) {
     } = useHttp(getAllAppointments, true);
   
     useEffect(() => {
-      sendRequest();
-    }, [sendRequest]);
+      sendRequest(userId);
+    }, [sendRequest, userId]);
   
     if (status === "pending") {
       return (
@@ -63,7 +64,7 @@ function AllAppointments(props) {
       return <NoAppointmentsFound />;
     }
   
-    return <AppointmentList appointments={loadedAppointments} userId = {props.userId} />;
+    return <AppointmentList appointments={loadedAppointments} uid = {authCtx.localId} />;
 }
 
 export default AllAppointments;

@@ -35,6 +35,7 @@ const ProfileForm = (props) => {
     const enteredNewDescription = newDescriptionInputRef.current.value;
     const newCurrentTime = Date().toLocaleString();
     const currentId = props.id;
+    const currentUser = props.uid;
     const currTime = props.timeStamp;
 
 /*
@@ -47,6 +48,7 @@ const ProfileForm = (props) => {
     });*/
 
      props.onUpdateAppointment({
+      localId: currentUser,
       id: currentId,
       name: enteredNewName,
       startTime: enteredNewStartTime,
@@ -63,25 +65,7 @@ const ProfileForm = (props) => {
   }
 
   async function finishEnteringHandler() {
-    
     setIsEntered(false);
-    //dispatch(appointmentActions.replaceAppointment(props.id));
-  
-      // fetch(
-      //   `https://webapp-appointments-default-rtdb.firebaseio.com/appointments/${props.id}.json`,
-      //   {
-      //     method: "PUT",
-      //     body: JSON.stringify(props.id),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // ).then((response) => {
-      //   setUserAppointments((prevAppointments) =>
-      //     prevAppointments.some((appointment) => appointment.id === props.id)
-      //   );
-      // });
-    
   }
 
   //Edit info

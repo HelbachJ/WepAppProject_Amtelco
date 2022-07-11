@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 import classes from "./MainNavigation.module.css";
@@ -7,12 +7,15 @@ import classes from "./MainNavigation.module.css";
 const MainNavigation = (props) => {
   const authCtx = useContext(AuthContext);
   const history = useHistory();
+  const params = useParams();
 
   const isLoggedIn = authCtx.isLoggedIn;
+ // localStorage.getItem(props.user)
+  
 
   const LogoutHandler = () => {
     authCtx.logout();
-    history.replace("/")
+    history.replace('/')
   };
 
   return (
@@ -24,13 +27,13 @@ const MainNavigation = (props) => {
         <ul>
           {!isLoggedIn && (
             <li>
-              <Link to="/">Login</Link>
+              <Link to='/'>Login</Link>
             </li>
           )}
 
           {isLoggedIn && (
             <li>
-              <Link to={`/appointments/${props.userId}`} activeClassName={classes.active}>
+              <Link to={`/appointments/${authCtx.localId}`} activeClassName={classes.active}>
                 Appointments
               </Link>
             </li>

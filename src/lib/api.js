@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext, createContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import AuthContext from "../store/auth-context";
+
 
 const FIREBASE_DOMAIN =
   "https://webapp-appointments-default-rtdb.firebaseio.com";
@@ -32,7 +34,8 @@ const FIREBASE_DOMAIN =
   
 
 export async function getAllAppointments(appointmentData) {
-  const response = await fetch(`${FIREBASE_DOMAIN}/appointments/${appointmentData.userId}.json`);
+  //const authCtx = createContext(AuthContext);
+  const response = await fetch(`${FIREBASE_DOMAIN}/appointments/${appointmentData}.json`);
   const data = await response.json();
 
   if (!response.ok) {
@@ -41,14 +44,14 @@ export async function getAllAppointments(appointmentData) {
 
   const transformedAppointments = [];
 
-  for (const key in data) {
+  for (const appointmentData in data) {
     const appointmentObj = {
-      id: key,
+      id: appointmentData,
       // name: data[key].name,
       // startTime: data[key].startTime,
       // endTime: data[key].endTime,
       // description: data[key].description,
-      ...data[key],
+      ...data[appointmentData],
     };
 
     transformedAppointments.push(appointmentObj);
@@ -57,31 +60,6 @@ export async function getAllAppointments(appointmentData) {
   return transformedAppointments;
 }
 
-export async function getAllUsers() {
-  const response = await fetch(`${FIREBASE_DOMAIN}/users.json`);
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Could not fetch users.");
-  }
-
-  const transformedUsers = [];
-
-  for (const key in data) {
-    const userObj = {
-      id: key,
-      // name: data[key].name,
-      // startTime: data[key].startTime,
-      // endTime: data[key].endTime,
-      // description: data[key].description,
-      ...data[key],
-    };
-
-    transformedUsers.push(userObj);
-  }
-
-  return transformedUsers;
-}
 
 export async function getSingleAppointment(appointmentId) {
   const response = await fetch(
@@ -102,7 +80,7 @@ export async function getSingleAppointment(appointmentId) {
 }
 
 export async function addAppointment(appointmentData) {
-  const response = await fetch(`${FIREBASE_DOMAIN}/appointments/${appointmentData.userId}.json`, {
+  const response = await fetch(`${FIREBASE_DOMAIN}/appointments/${appointmentData.localId}.json`, {
     method: "POST",
     body: JSON.stringify(appointmentData),
     headers: {
@@ -141,7 +119,7 @@ export async function UpdateAppointment(appointmentObj) {
   // };
 
   const response = await fetch(
-    `${FIREBASE_DOMAIN}/appointments/${appointmentObj.userId}/${appointmentObj.id}.json`,
+    `${FIREBASE_DOMAIN}/appointments/${appointmentObj.localId}/${appointmentObj.id}.json`,
     {
       method: "PUT",
       body: JSON.stringify(appointmentObj),

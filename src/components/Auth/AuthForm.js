@@ -146,7 +146,7 @@
 
 // export default AuthForm;
 import { useState, useRef, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
 import classes from "./AuthForm.module.css";
@@ -157,26 +157,9 @@ import App from "../../App";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getIdToken } from "firebase/auth";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBn2Seq2SIPI7aF1D2rjlhPfOR1pAdjssM",
-
-  authDomain: "webapp-appointments.firebaseapp.com",
-
-  databaseURL: "https://webapp-appointments-default-rtdb.firebaseio.com",
-
-  projectId: "webapp-appointments",
-
-  storageBucket: "webapp-appointments.appspot.com",
-
-  messagingSenderId: "204832763234",
-
-  appId: "1:204832763234:web:7ee115084b59ad59c8503b",
-
-  measurementId: "G-XYHRX0CXZW",
-};
-
+import AppointmentItem from "../Profile/AppointmentItem";
+import AppointmentsForm from "../Profile/AppointmentsForm";
+import AppointmentList from "../Profile/AppointmentList";
 
 const AuthForm = (props) => {
   const history = useHistory();
@@ -186,6 +169,7 @@ const AuthForm = (props) => {
   const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const params = useParams();
   
 
   const switchAuthModeHandler = () => {
@@ -193,14 +177,15 @@ const AuthForm = (props) => {
   };
 
   const submitHandler = (event) => {
+    
     event.preventDefault();
     const tag = "@gmail.com";
     const enteredEmail = emailInputRef.current.value + tag;
     const enteredPassword = passwordInputRef.current.value;
-    const userId = enteredEmail;
-     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const user = auth.currentUser;
+    //  const app = initializeApp(firebaseConfig);
+    // const auth = getAuth(app);
+    // const user = auth.currentUser;
+    const userId = authCtx.token;
 
     // optional: Add validation
 
@@ -231,10 +216,9 @@ const AuthForm = (props) => {
         } else {
           return res.json().then((data) => {
             let errorMessage = "Authentication failed!";
-            console.log(enteredEmail, enteredPassword);
-            // if (data && data.error && data.error.message) {
-            //   errorMessage = data.error.message;
-            // }
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
 
             throw new Error(errorMessage);
           });
@@ -244,19 +228,8 @@ const AuthForm = (props) => {
         const expirationTime = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         );
-        authCtx.login(data.idToken, expirationTime.toISOString());
-        history.replace(`/appointments/${userId}`);
-        console.log(user.getIdToken(userId))
-        
-        return (
-          <div>
-            <AllAppointments userId={userId} />
-            <NewAppointment userId={userId} />
-            <MainNavigation userId={userId} />
-            <App userId={userId} />
-            <api userId={userId} />
-          </div>
-        );
+        authCtx.login(data.idToken, data.localId, expirationTime.toISOString());
+        history.push(`/appointments/${data.localId}`);
       })
       .catch((err) => {
         alert(err.message);
@@ -308,4 +281,5 @@ const AuthForm = (props) => {
   );
 };
 
+//export const uid = getUserId(userId) ;
 export default AuthForm;

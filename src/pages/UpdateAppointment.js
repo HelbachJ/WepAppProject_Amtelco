@@ -5,7 +5,7 @@
 // };
 
 // export default ProfilePage;
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useParams, Route, Link, useRouteMatch, useHistory } from "react-router-dom";
 import { Fragment } from "react/cjs/react.production.min";
 
@@ -14,6 +14,7 @@ import useHttp from "../hooks/use-http";
 import useHttps from "../hooks/use-https";
 import { UpdateAppointment } from "../lib/api";
 import { getSingleAppointment } from "../lib/api";
+import AuthContext from "../store/auth-context";
 
 const FIREBASE_DOMAIN =
   "https://webapp-appointments-default-rtdb.firebaseio.com";
@@ -35,12 +36,13 @@ const FIREBASE_DOMAIN =
 // };
 
 function UpdateAppointments(props) {
+  const authCtx = useContext(AuthContext);
   const match = useRouteMatch();
   const params = useParams();
   const history = useHistory();
   //const { actualAppointmentId } = loadedAppointment.id;
 
-  const { appointmentId } = params;
+  const { appointmentId, userId } = params;
 
   const {
     sendRequests,
@@ -53,7 +55,7 @@ function UpdateAppointments(props) {
 
   useEffect(() => {
     if (status === "completed" && state === "completed") {
-      history.replace(`/appointments/${props.userId}`);
+      history.replace(`/appointments/${authCtx.localId}`);
     }
   }, [status, state, history]);
 
@@ -100,6 +102,7 @@ function UpdateAppointments(props) {
       onGetAppointment = {getAppointmentHandler}
       onUpdateAppointment={updateAppointmentHandler}
       id={appointmentId}
+      uid={userId}
     />
   );
 }
