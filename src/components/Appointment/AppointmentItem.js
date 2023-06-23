@@ -24,11 +24,11 @@ const AppointmentItem = (props) => {
     console.log("RENDERING APPOINTMENTS", userAppointments);
   }, [userAppointments]);
 
-  function deleteHandler(event) {
+  const deleteHandler = async (event) => {
     event.preventDefault();
     history.push({ pathname: location.pathname });
 
-    fetch(
+    await fetch(
       `https://webapp-appointments-default-rtdb.firebaseio.com/appointments/${props.localId}/${props.id}.json`,
       {
         method: "DELETE",
@@ -37,7 +37,8 @@ const AppointmentItem = (props) => {
       setUserAppointments((prevAppointments) =>
         prevAppointments.filter((appointment) => appointment.id !== props.id)
       );
-      window.location.reload(false); //temporary fix
+      //window.location.reload(false); //temporary fix
+      //return response;
     });
   }
 
