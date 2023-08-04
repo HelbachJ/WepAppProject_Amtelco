@@ -32,7 +32,7 @@ const MainNavigation = (props) => {
             <li>
               <Link
                 to={`/appointments/${authCtx.localId}`}
-                activeClassName={classes.active}
+                activeclassname={classes.active}
               >
                 Appointments
               </Link>
@@ -42,7 +42,7 @@ const MainNavigation = (props) => {
           {isLoggedIn && (
             <li>
               <Link
-                activeClassName={classes.active}
+                activeclassname={classes.active}
                 to={`/newAppointment/${authCtx.localId}`}
               >
                 Add Appointment
