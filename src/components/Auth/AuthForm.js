@@ -19,8 +19,8 @@ const AuthForm = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    const tag = "@gmail.com";
-    const enteredEmail = emailInputRef.current.value + tag;
+    //const tag = "@gmail.com";
+    const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
     setIsLoading(true);
